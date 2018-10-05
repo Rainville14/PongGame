@@ -31,7 +31,7 @@ window.onload= function() {
 	tennisCourt = document.getElementById('court');
 	tennisCourtSurface = tennisCourt.getContext('2d');
 	tennisCourt.addEventListener("mousemove", function(evt) {
-		paddle.y = getMousePos().y;
+		paddle.y = getMousePos(evt).y;
 	})
 	initCourt();
 }
@@ -43,15 +43,18 @@ function initCourt() {
 }
 function drawEverything() {
 	drawRect(0, 0, tennisCourt.width, tennisCourt.height, 'green');
-	drawRect(0, 0, 20, 100, 'red');
+	drawRect(paddle.x, paddle.y, paddle.width, paddle.height, 'red');
 	drawCircle(ball.x, ball.y, ball.radius, 'white');
 }
 function moveEverything() {
 	ball.x = ball.x + ball.speedX;
 	ball.y = ball.y + ball.speedY;
 
-	if(ball.x < ball.radius || ball.x > tennisCourt.width - ball.radius) {
+	if((ball.y > paddle.y && ball.y < paddle.y - paddle.height) && (ball.x < (ball.radius + paddle.width) || ball.x > tennisCourt.width - ball.radius)) {
 		ball.speedX = -ball.speedX;
+	} else {
+		ball.x = tennisCourt.width/2;
+		ball.y = tennisCourt.height/2;
 	}
 
 	if(ball.y < ball.radius || ball.y > tennisCourt.height - ball.radius) {
